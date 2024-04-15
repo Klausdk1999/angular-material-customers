@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-create-customer',
   standalone: true,
@@ -35,6 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     CdkAccordionModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './create-customer.component.html',
@@ -47,7 +49,11 @@ export class CreateCustomerComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   platformId = inject(PLATFORM_ID);
+  constructor(private _snackBar: MatSnackBar) {}
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
   createCustomerForm = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(3)]],
     emails: this.fb.array([this.createEmailControl()]),
@@ -129,10 +135,11 @@ export class CreateCustomerComponent {
           )
           .subscribe({
             next: (response) => {
-              console.log(response);
+              this.openSnackBar('Cliente atualizado com sucesso', 'X');
               this.router.navigate(['/customers']);
             },
             error: (error) => {
+              this.openSnackBar('Erro ao atualizar cliente', 'X');
               console.error(error);
             },
           });
@@ -144,10 +151,11 @@ export class CreateCustomerComponent {
           )
           .subscribe({
             next: (response) => {
-              console.log(response);
+              this.openSnackBar('Cliente criado com sucesso', 'X');
               this.router.navigate(['/customers']);
             },
             error: (error) => {
+              this.openSnackBar('Erro ao criar cliente', 'X');
               console.error(error);
             },
           });
@@ -155,12 +163,4 @@ export class CreateCustomerComponent {
     }
     this.createCustomerForm.reset();
   }
-
-  contacts = [
-    {
-      fullname: 'John Doe',
-      emails: ['a@b.com', 'test@email.com'],
-      phones: ['1234567890', '111111222222222'],
-    },
-  ];
 }

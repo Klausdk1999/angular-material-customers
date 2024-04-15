@@ -16,10 +16,13 @@
   <mat-form-field appearance="outline">
     <mat-label>Senha</mat-label>
     <input
+      name="password"
+      type="password"
       matInput
       placeholder="Senha"
       formControlName="password"
       required=""
+      matNativeControl="password"
     />
     <!-- required error -->
     @if(loginForm.get('password')?.hasError('required') &&

@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerDto } from '../dtos/customer.dto';
 import { ContactDto } from '../dtos/contact.dto';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-contact-dashboard',
@@ -19,6 +20,7 @@ import { ContactDto } from '../dtos/contact.dto';
     MatSortModule,
     MatPaginatorModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './contact-dashboard.component.html',
   styleUrl: './contact-dashboard.component.scss',
@@ -36,17 +38,20 @@ export class ContactDashboardComponent {
   route = inject(ActivatedRoute);
   router = inject(Router);
   platformId = inject(PLATFORM_ID);
+  constructor(private _snackBar: MatSnackBar) {}
 
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
   customerId: string | null = null;
 
   contacts: ContactDto[] = [];
 
   getContacts = (customerId: string) => {
     this.http
-      .get(`http://localhost:3000/customers/${customerId}/contact`)
+      .get(`http://localhost:3000/customers/${customerId}/contacts`)
       .subscribe({
         next: (response: any) => {
-          console.log(response);
           this.contacts = response;
         },
         error: (error) => {
@@ -83,8 +88,11 @@ export class ContactDashboardComponent {
                 (customer) => customer.id !== id
               );
             }
+            this.openSnackBar('Contato deletado', 'X');
           },
           error: (error) => {
+            this.openSnackBar('Erro ao deletar contato', 'X');
+
             console.error(error);
           },
         });

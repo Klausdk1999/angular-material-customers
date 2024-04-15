@@ -8,6 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CustomerDto } from '../dtos/customer.dto';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatSortModule,
     MatPaginatorModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
@@ -36,7 +38,14 @@ export class DashboardComponent {
   http = inject(HttpClient);
   router = inject(Router);
   platformId = inject(PLATFORM_ID);
+  constructor(private _snackBar: MatSnackBar) {}
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
+
   customers: CustomerDto[] = [];
+
   getCustomers = () => {
     this.http.get('http://localhost:3000/customers').subscribe({
       next: (response: any) => {
@@ -68,8 +77,10 @@ export class DashboardComponent {
               (customer) => customer.id !== id
             );
           }
+          this.openSnackBar('Cliente removido com sucesso', 'X');
         },
         error: (error) => {
+          this.openSnackBar('Erro ao remover cliente', 'X');
           console.error(error);
         },
       });

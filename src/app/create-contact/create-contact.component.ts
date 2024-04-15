@@ -18,6 +18,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactDto } from '../dtos/contact.dto';
 import { CustomerDto } from '../dtos/customer.dto';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-create-contact',
@@ -32,6 +33,7 @@ import { CustomerDto } from '../dtos/customer.dto';
     CommonModule,
     CdkAccordionModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   templateUrl: './create-contact.component.html',
   styleUrl: './create-contact.component.scss',
@@ -42,6 +44,12 @@ export class CreateContactComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   platformId = inject(PLATFORM_ID);
+
+  constructor(private _snackBar: MatSnackBar) {}
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
 
   createContactForm = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(3)]],
@@ -70,7 +78,7 @@ export class CreateContactComponent {
   loadContact(customerId: string, contactId: string) {
     this.http
       .get<ContactDto>(
-        `http://localhost:3000/customers/${customerId}/contact/${contactId}`
+        `http://localhost:3000/customers/${customerId}/contacts/${contactId}`
       )
       .subscribe({
         next: (customer) => {
@@ -121,31 +129,35 @@ export class CreateContactComponent {
       if (this.customerId && this.contactId) {
         this.http
           .put<CustomerDto>(
-            `http://localhost:3000/customers/${this.customerId}/contact/${this.contactId}`,
+            `http://localhost:3000/customers/${this.customerId}/contacts/${this.contactId}`,
             this.createContactForm.value
           )
           .subscribe({
             next: (response) => {
               console.log(response);
+              this.openSnackBar('Contato atualizado com sucesso', 'X');
               this.router.navigate(['/customers']);
             },
             error: (error) => {
+              this.openSnackBar('Erro ao atualizar contato', 'X');
               console.error(error);
             },
           });
       } else {
         this.http
           .post<CustomerDto>(
-            `http://localhost:3000/customers/${this.customerId}/contact`,
+            `http://localhost:3000/customers/${this.customerId}/contacts`,
             this.createContactForm.value
           )
           .subscribe({
             next: (response) => {
               console.log(response);
+              this.openSnackBar('Contato criado com sucesso', 'X');
               this.router.navigate(['/customers']);
             },
             error: (error) => {
               console.error(error);
+              this.openSnackBar('Erro ao criar contato', 'X');
             },
           });
       }
