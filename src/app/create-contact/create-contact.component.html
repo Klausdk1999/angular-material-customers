@@ -1,7 +1,7 @@
 <!-- Customer form { fullname, email[], phone[]} -->
 <form
   action=""
-  [formGroup]="createCustomerForm"
+  [formGroup]="createContactForm"
   style="
     display: flex;
     flex-direction: column;
@@ -10,7 +10,7 @@
     padding-top: 25px;
   "
 >
-  <h1>Cliente</h1>
+  <h1>Contatos</h1>
   <mat-form-field appearance="outline">
     <mat-label>Nome completo</mat-label>
     <input
@@ -20,13 +20,13 @@
       formControlName="fullname"
     />
     <!-- required error -->
-    @if(createCustomerForm.get('fullname')?.hasError('required') &&
-    createCustomerForm.get('fullname')?.touched){
+    @if(createContactForm.get('fullname')?.hasError('required') &&
+    createContactForm.get('fullname')?.touched){
     <mat-error>Campo obrigatório</mat-error>
     }
     <!-- min 3 char error -->
-    @if(createCustomerForm.get('fullname')?.hasError('minlength') &&
-    createCustomerForm.get('fullname')?.touched){
+    @if(createContactForm.get('fullname')?.hasError('minlength') &&
+    createContactForm.get('fullname')?.touched){
     <mat-error>Mínimo de 3 caracteres</mat-error>
     }
   </mat-form-field>
@@ -119,61 +119,17 @@
       </button>
     </div>
   </div>
-  <mat-form-field color="accent" appearance="outline">
-    <mat-label>Data de registro</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="registerDate" />
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
   <!-- Submit button -->
   <button
     mat-raised-button
     color="primary"
     [disabled]="
-      createCustomerForm.get('fullname')?.invalid ||
-      createCustomerForm.get('email')?.invalid ||
-      createCustomerForm.get('phone')?.invalid ||
-      createCustomerForm.get('registerDate')?.invalid
+      createContactForm.get('fullname')?.invalid ||
+      createContactForm.get('email')?.invalid ||
+      createContactForm.get('phone')?.invalid
     "
     (click)="onSubmit()"
   >
     Salvar
   </button>
 </form>
-
-<h2>Contatos</h2>
-<cdk-accordion>
-  @for (contact of contacts; track contact; let index = $index) {
-  <cdk-accordion-item
-    #accordionItem="cdkAccordionItem"
-    class="example-accordion-item"
-    role="button"
-    tabindex="0"
-    [attr.id]="'accordion-header-' + index"
-    [attr.aria-expanded]="accordionItem.expanded"
-    [attr.aria-controls]="'accordion-body-' + index"
-  >
-    <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
-      {{ contact.fullname }}
-      <span class="example-accordion-item-description">
-        Click to {{ accordionItem.expanded ? "close" : "open" }}
-      </span>
-    </div>
-
-    <div
-      class="example-accordion-item-body"
-      role="region"
-      [style.display]="accordionItem.expanded ? '' : 'none'"
-      [attr.id]="'accordion-body-' + index"
-      [attr.aria-labelledby]="'accordion-header-' + index"
-    >
-      <p>{{ contact.fullname }}</p>
-      @for (email of contact.emails; track email; let i = $index) {
-      <p>{{ email }}</p>
-      } @for (phone of contact.phones; track phone; let i = $index) {
-      <p>{{ phone }}</p>
-      }
-    </div>
-  </cdk-accordion-item>
-  }
-</cdk-accordion>

@@ -1,9 +1,9 @@
 <!-- Customer list -->
 <div style="padding: 10%; padding-top: 25px">
-  <h1>Clientes</h1>
+  <h1>Contatos</h1>
   <table
     mat-table
-    [dataSource]="customers"
+    [dataSource]="contacts"
     class="mat-elevation-z8"
     style="border-radius: 20px"
   >
@@ -21,11 +21,6 @@
       <th mat-header-cell *matHeaderCellDef>Telefone</th>
       <td mat-cell *matCellDef="let element">{{ element.phones.length }}</td>
     </ng-container>
-    <ng-container matColumnDef="contacts">
-      <th mat-header-cell *matHeaderCellDef>Contatos</th>
-      <td mat-cell *matCellDef="let element">{{ element.contacts.length }}</td>
-    </ng-container>
-
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Excluir</th>
       <td mat-cell *matCellDef="let element">
@@ -47,14 +42,6 @@
       <td mat-cell *matCellDef="let element">
         <button mat-button color="white" (click)="onCreateContact(element.id)">
           <mat-icon> add </mat-icon>
-        </button>
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="view-contacts">
-      <th mat-header-cell *matHeaderCellDef>Contatos</th>
-      <td mat-cell *matCellDef="let element">
-        <button mat-button color="white" (click)="onViewContacts(element.id)">
-          <mat-icon> read_more </mat-icon>
         </button>
       </td>
     </ng-container>

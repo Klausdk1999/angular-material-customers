@@ -16,10 +16,12 @@
         style="text-decoration: none; color: white; border-radius: 5px"
         >Clientes</a
       >
-      <a routerLink="/new-customer" style="color: white; border-radius: 5px"
+      <a routerLink="/customer" style="color: white; border-radius: 5px"
         >Registrar Cliente</a
       >
-      <mat-icon>menu</mat-icon>
+      <button mat-icon-button color="white" type="button" (click)="logout()">
+        <mat-icon> logout </mat-icon>
+      </button>
     </mat-toolbar-row>
   </mat-toolbar>
   <router-outlet></router-outlet>

@@ -1,29 +1,26 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  HttpClientModule,
-} from '@angular/common/http';
+import { CdkAccordionModule } from '@angular/cdk/accordion';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Component, inject, PLATFORM_ID } from '@angular/core';
 import {
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-  FormControl,
   FormArray,
+  FormBuilder,
+  FormControl,
+  ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { CustomerDto } from '../dtos/customer.dto';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CdkAccordionModule } from '@angular/cdk/accordion';
-import { MatIconModule } from '@angular/material/icon';
+import { ContactDto } from '../dtos/contact.dto';
+import { CustomerDto } from '../dtos/customer.dto';
+
 @Component({
-  selector: 'app-create-customer',
+  selector: 'app-create-contact',
   standalone: true,
   imports: [
     MatSlideToggleModule,
@@ -36,33 +33,32 @@ import { MatIconModule } from '@angular/material/icon';
     CdkAccordionModule,
     MatIconModule,
   ],
-  providers: [provideNativeDateAdapter()],
-  templateUrl: './create-customer.component.html',
-  styleUrl: './create-customer.component.scss',
+  templateUrl: './create-contact.component.html',
+  styleUrl: './create-contact.component.scss',
 })
-export class CreateCustomerComponent {
-  title = 'angular-material-customers';
+export class CreateContactComponent {
   fb = inject(FormBuilder);
   http = inject(HttpClient);
   router = inject(Router);
   route = inject(ActivatedRoute);
   platformId = inject(PLATFORM_ID);
 
-  createCustomerForm = this.fb.group({
+  createContactForm = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(3)]],
     emails: this.fb.array([this.createEmailControl()]),
     phones: this.fb.array([this.createPhoneControl()]),
-    registerDate: [new Date(), [Validators.required]],
   });
 
   customerId: string | null = null;
+  contactId: string | null = null;
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.route.paramMap.subscribe((params) => {
-        this.customerId = params.get('id');
-        if (this.customerId) {
-          this.loadCustomer(this.customerId);
+        this.customerId = params.get('customerId');
+        this.contactId = params.get('contactId');
+        if (this.customerId && this.contactId) {
+          this.loadContact(this.customerId, this.contactId);
         } else {
           this.addEmail();
           this.addPhone();
@@ -71,14 +67,15 @@ export class CreateCustomerComponent {
     }
   }
 
-  loadCustomer(id: string) {
+  loadContact(customerId: string, contactId: string) {
     this.http
-      .get<CustomerDto>(`http://localhost:3000/customers/${id}`)
+      .get<ContactDto>(
+        `http://localhost:3000/customers/${customerId}/contact/${contactId}`
+      )
       .subscribe({
         next: (customer) => {
-          this.createCustomerForm.patchValue({
+          this.createContactForm.patchValue({
             fullname: customer.fullname,
-            registerDate: customer.registerDate,
           });
           this.setFormArrays('emails', customer.emails);
           this.setFormArrays('phones', customer.phones);
@@ -88,7 +85,7 @@ export class CreateCustomerComponent {
   }
 
   setFormArrays(field: string, data: any[]) {
-    const array = this.createCustomerForm.get(field) as FormArray;
+    const array = this.createContactForm.get(field) as FormArray;
     array.clear();
     data.forEach((value) =>
       array.push(this.fb.control(value, [Validators.required]))
@@ -112,20 +109,20 @@ export class CreateCustomerComponent {
   }
 
   get emails(): FormArray {
-    return this.createCustomerForm.get('emails') as FormArray;
+    return this.createContactForm.get('emails') as FormArray;
   }
 
   get phones(): FormArray {
-    return this.createCustomerForm.get('phones') as FormArray;
+    return this.createContactForm.get('phones') as FormArray;
   }
 
   onSubmit() {
-    if (this.createCustomerForm.valid) {
-      if (this.customerId) {
+    if (this.createContactForm.valid) {
+      if (this.customerId && this.contactId) {
         this.http
           .put<CustomerDto>(
-            `http://localhost:3000/customers/${this.customerId}`,
-            this.createCustomerForm.value
+            `http://localhost:3000/customers/${this.customerId}/contact/${this.contactId}`,
+            this.createContactForm.value
           )
           .subscribe({
             next: (response) => {
@@ -139,8 +136,8 @@ export class CreateCustomerComponent {
       } else {
         this.http
           .post<CustomerDto>(
-            'http://localhost:3000/customers',
-            this.createCustomerForm.value
+            `http://localhost:3000/customers/${this.customerId}/contact`,
+            this.createContactForm.value
           )
           .subscribe({
             next: (response) => {
@@ -153,14 +150,6 @@ export class CreateCustomerComponent {
           });
       }
     }
-    this.createCustomerForm.reset();
+    this.createContactForm.reset();
   }
-
-  contacts = [
-    {
-      fullname: 'John Doe',
-      emails: ['a@b.com', 'test@email.com'],
-      phones: ['1234567890', '111111222222222'],
-    },
-  ];
 }
