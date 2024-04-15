@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 export class DashboardComponent {
   displayedColumns: string[] = ['fullname', 'email', 'phone', 'actions'];
   http = inject(HttpClient);
+  router = inject(Router);
   platformId = inject(PLATFORM_ID);
   customers = [
     {
@@ -47,6 +49,10 @@ export class DashboardComponent {
       this.getCustomers();
     }
   }
+  onSelect(id: number) {
+    this.router.navigate(['/edit-customer', id]);
+  }
+
   onDelete(id: number) {
     if (id) {
       this.http.delete(`http://localhost:3000/customers/${id}`).subscribe({

@@ -15,7 +15,7 @@
     <!-- Fullname Column -->
     <ng-container matColumnDef="fullname">
       <th mat-header-cell *matHeaderCellDef>Nome completo</th>
-      <td mat-cell *matCellDef="let element">{{ element.fullname }}</td>
+      <td mat-cell *matCellDef="let element" (click)="onSelect(element.id)">{{ element.fullname }}</td>
     </ng-container>
     <!-- Email Column -->
     <ng-container matColumnDef="email">

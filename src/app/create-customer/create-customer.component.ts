@@ -18,6 +18,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CustomerDto } from '../dtos/customer.dto';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-customer',
@@ -25,6 +27,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     MatSlideToggleModule,
     MatInputModule,
+    MatButtonModule,
     MatSelectModule,
     ReactiveFormsModule,
     MatDatepickerModule,
@@ -38,12 +41,54 @@ export class CreateCustomerComponent {
   title = 'angular-material-customers';
   fb = inject(FormBuilder);
   http = inject(HttpClient);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
+
   createCustomerForm = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(3)]],
     emails: this.fb.array([this.createEmailControl()]),
     phones: this.fb.array([this.createPhoneControl()]),
     registerDate: [new Date(), [Validators.required]],
   });
+
+  customerId: string | null = null;
+
+  ngOnInit() {
+    this.route.paramMap.subscribe((params) => {
+      this.customerId = params.get('id');
+      if (this.customerId) {
+        this.loadCustomer(this.customerId);
+      } else {
+        this.addEmail();
+        this.addPhone();
+      }
+    });
+  }
+
+  loadCustomer(id: string) {
+    this.http
+      .get<CustomerDto>(`http://localhost:3000/customers/${id}`)
+      .subscribe({
+        next: (customer) => {
+          this.createCustomerForm.patchValue({
+            fullname: customer.fullname,
+            registerDate: customer.registerDate,
+          });
+          this.setFormArrays('emails', customer.emails);
+          this.setFormArrays('phones', customer.phones);
+        },
+        error: (error) => console.error('Could not load customer', error),
+      });
+  }
+
+  setFormArrays(field: string, data: any[]) {
+    const array = this.createCustomerForm.get(field) as FormArray;
+    array.clear();
+    data.forEach((value) =>
+      array.push(this.fb.control(value, [Validators.required]))
+    );
+  }
+
   createEmailControl(): FormControl {
     return this.fb.control('', [Validators.required, Validators.email]);
   }
@@ -78,6 +123,7 @@ export class CreateCustomerComponent {
         .subscribe({
           next: (response) => {
             console.log(response);
+            this.router.navigate(['/customers']);
           },
           error: (error) => {
             console.error(error);

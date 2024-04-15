@@ -22,6 +22,7 @@ export const routes: Routes = [
     path: 'new-customer',
     component: CreateCustomerComponent,
   },
+  { path: 'edit-customer/:id', component: CreateCustomerComponent },
   {
     path: '**',
     redirectTo: 'login',
