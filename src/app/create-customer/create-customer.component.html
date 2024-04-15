@@ -1,0 +1,83 @@
+<!-- Customer form { fullname, email[], phone[]} -->
+<form
+  action=""
+  [formGroup]="createCustomerForm"
+  style="display: flex; flex-direction: column; padding: 10%; gap: 5px"
+>
+  <h1>Cliente</h1>
+  <mat-form-field appearance="outline">
+    <mat-label>Nome completo</mat-label>
+    <input
+      matInput
+      required=""
+      placeholder="Nome completo"
+      formControlName="fullname"
+    />
+    <!-- required error -->
+    @if(createCustomerForm.get('fullname')?.hasError('required') &&
+    createCustomerForm.get('fullname')?.touched){
+    <mat-error>Campo obrigatório</mat-error>
+    }
+    <!-- min 3 char error -->
+    @if(createCustomerForm.get('fullname')?.hasError('minlength') &&
+    createCustomerForm.get('fullname')?.touched){
+    <mat-error>Mínimo de 3 caracteres</mat-error>
+    }
+  </mat-form-field>
+  <div formArrayName="emails">
+    <div *ngFor="let emailControl of emails.controls; let i = index">
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput placeholder="E-mail" [formControlName]="i" />
+        <mat-error *ngIf="emailControl.hasError('required')">
+          Campo obrigatório
+        </mat-error>
+        <mat-error *ngIf="emailControl.hasError('email')">
+          E-mail inválido
+        </mat-error>
+      </mat-form-field>
+      <button mat-button type="button" (click)="emails.removeAt(i)">
+        Remove
+      </button>
+    </div>
+    <button mat-button type="button" (click)="addEmail()">Add Email</button>
+  </div>
+
+  <div formArrayName="phones">
+    <div *ngFor="let phone of phones.controls; let i = index">
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput placeholder="Telefone" [formControlName]="i" />
+        <mat-error *ngIf="phone.hasError('required')">
+          Campo obrigatório
+        </mat-error>
+        <mat-error *ngIf="phone.hasError('minlength')">
+          Telefone inválido
+        </mat-error>
+      </mat-form-field>
+      <button mat-button type="button" (click)="phones.removeAt(i)">
+        Remove
+      </button>
+    </div>
+    <button mat-button type="button" (click)="addPhone()">Add Phone</button>
+  </div>
+  <mat-form-field color="accent" appearance="outline">
+    <mat-label>Data de registro</mat-label>
+    <input matInput [matDatepicker]="picker" />
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+  <!-- Submit button -->
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      createCustomerForm.get('fullname')?.invalid ||
+      createCustomerForm.get('email')?.invalid ||
+      createCustomerForm.get('phone')?.invalid
+    "
+    (click)="onSubmit()"
+  >
+    Salvar
+  </button>
+</form>

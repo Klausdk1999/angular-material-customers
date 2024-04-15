@@ -1,119 +1,39 @@
 <div>
-  <!-- Customer form { fullname, email[], phone[]} -->
-  <form
-    action=""
-    [formGroup]="createCustomerForm"
-    style="display: flex; flex-direction: column; padding: 10%; gap: 5px"
+  <div
+    style="
+      display: flex;
+      gap: 10px;
+      padding: 10px;
+      background-color: #bbd3ec;
+      color: white;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 10px;
+    "
   >
-    <h1>Cliente</h1>
-    <mat-form-field appearance="fill">
-      <mat-label>Nome completo</mat-label>
-      <input
-        matInput
-        required=""
-        placeholder="Nome completo"
-        formControlName="fullname"
-      />
-      <!-- required error -->
-      @if(createCustomerForm.get('fullname')?.hasError('required') &&
-      createCustomerForm.get('fullname')?.touched){
-      <mat-error>Campo obrigatório</mat-error>
-      }
-      <!-- min 3 char error -->
-      @if(createCustomerForm.get('fullname')?.hasError('minlength') &&
-      createCustomerForm.get('fullname')?.touched){
-      <mat-error>Mínimo de 3 caracteres</mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>E-mail</mat-label>
-      <input
-        matInput
-        placeholder="E-mail"
-        formControlName="email"
-        required=""
-      />
-      <!-- required error -->
-      @if(createCustomerForm.get('email')?.hasError('required') &&
-      createCustomerForm.get('email')?.touched){
-      <mat-error>Campo obrigatório</mat-error>
-      }
-      <!-- email error -->
-      @if(createCustomerForm.get('email')?.hasError('email') &&
-      createCustomerForm.get('email')?.touched){
-      <mat-error>E-mail inválido</mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Telefone</mat-label>
-      <input
-        matInput
-        required=""
-        placeholder="Telefone"
-        formControlName="phone"
-      />
-      <!-- required error -->
-      @if(createCustomerForm.get('phone')?.hasError('required') &&
-      createCustomerForm.get('phone')?.touched){
-      <mat-error>Campo obrigatório</mat-error>
-      }
-      <!-- phone error -->
-      @if(createCustomerForm.get('phone')?.hasError('phone') &&
-      createCustomerForm.get('phone')?.touched){
-      <mat-error>Telefone inválido</mat-error>
-      }
-    </mat-form-field>
-    <!-- Submit button -->
-    <button
-      mat-raised-button
-      color="primary"
-      [disabled]="
-        createCustomerForm.get('fullname')?.invalid ||
-        createCustomerForm.get('email')?.invalid ||
-        createCustomerForm.get('phone')?.invalid
+    <a
+      routerLink="/customers"
+      style="
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        padding: 10px;
+        border-radius: 5px;
       "
-      (click)="onSubmit()"
+      >Clientes</a
     >
-      Salvar
-    </button>
-  </form>
-
-  <!-- Customer list -->
-  <div style="padding: 10%">
-    <h1>Clientes</h1>
-    <table mat-table [dataSource]="customers" class="mat-elevation-z8">
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>Id</th>
-        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-      </ng-container>
-      <!-- Fullname Column -->
-      <ng-container matColumnDef="fullname">
-        <th mat-header-cell *matHeaderCellDef>Nome completo</th>
-        <td mat-cell *matCellDef="let element">{{ element.fullname }}</td>
-      </ng-container>
-      <!-- Email Column -->
-      <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef>E-mail</th>
-        <td mat-cell *matCellDef="let element">{{ element.email }}</td>
-      </ng-container>
-      <!-- Phone Column -->
-      <ng-container matColumnDef="phone">
-        <th mat-header-cell *matHeaderCellDef>Telefone</th>
-        <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
-      </ng-container>
-      <!-- Action Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Ação</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-raised-button color="warn" (click)="onDelete(element.id)">
-            Excluir
-          </button>
-        </td>
-      </ng-container>
-      <!-- Table rows -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+    <a
+      routerLink="/new-customer"
+      style="
+        text-decoration: none;
+        color: white;
+        background-color: #0eaa3d;
+        padding: 10px;
+        border-radius: 5px;
+      "
+      >Registrar Cliente</a
+    >
   </div>
+
+  <router-outlet></router-outlet>
 </div>

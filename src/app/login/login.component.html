@@ -1,0 +1,41 @@
+<form
+  action=""
+  [formGroup]="loginForm"
+  style="display: flex; flex-direction: column; padding: 20%; gap: 5px"
+>
+  <h1>Login</h1>
+  <mat-form-field appearance="outline">
+    <mat-label>Login</mat-label>
+    <input matInput required="" placeholder="Login" formControlName="login" />
+    <!-- required error -->
+    @if(loginForm.get('login')?.hasError('required') &&
+    loginForm.get('login')?.touched){
+    <mat-error>Campo obrigatório</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Senha</mat-label>
+    <input
+      matInput
+      placeholder="Senha"
+      formControlName="password"
+      required=""
+    />
+    <!-- required error -->
+    @if(loginForm.get('password')?.hasError('required') &&
+    loginForm.get('password')?.touched){
+    <mat-error>Campo obrigatório</mat-error>
+    }
+  </mat-form-field>
+  <!-- Submit button -->
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="
+      loginForm.get('login')?.invalid || loginForm.get('password')?.invalid
+    "
+    (click)="onSubmit()"
+  >
+    Acessar
+  </button>
+</form>
