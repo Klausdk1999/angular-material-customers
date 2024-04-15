@@ -6,6 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { CustomerDto } from '../dtos/customer.dto';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,20 +20,7 @@ export class DashboardComponent {
   http = inject(HttpClient);
   router = inject(Router);
   platformId = inject(PLATFORM_ID);
-  customers = [
-    {
-      id: 1,
-      fullname: 'John Doe',
-      email: 'a@b.com',
-      phone: '11223344556677',
-    },
-    {
-      id: 2,
-      fullname: 'Jane Doe',
-      email: '1@2.com.br',
-      phone: '11223344556677',
-    },
-  ];
+  customers: CustomerDto[] = [];
   getCustomers = () => {
     this.http.get('http://localhost:3000/customers').subscribe({
       next: (response: any) => {
@@ -49,18 +37,20 @@ export class DashboardComponent {
       this.getCustomers();
     }
   }
-  onSelect(id: number) {
+  onSelect(id: string) {
     this.router.navigate(['/edit-customer', id]);
   }
 
-  onDelete(id: number) {
+  onDelete(id: string) {
     if (id) {
       this.http.delete(`http://localhost:3000/customers/${id}`).subscribe({
         next: (response) => {
           console.log(response);
-          this.customers = this.customers.filter(
-            (customer) => customer.id !== id
-          );
+          if (this.customers.length) {
+            this.customers = this.customers.filter(
+              (customer) => customer.id !== id
+            );
+          }
         },
         error: (error) => {
           console.error(error);

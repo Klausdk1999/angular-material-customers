@@ -1,6 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
@@ -8,6 +10,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     RouterModule,
     RouterOutlet,
+    MatToolbarModule,
+    MatIconModule,
     //BrowserAnimationsModule,
   ],
   templateUrl: './app.component.html',

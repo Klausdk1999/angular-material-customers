@@ -3,7 +3,7 @@ import {
   HttpClient,
   HttpClientModule,
 } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -17,7 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { CustomerDto } from '../dtos/customer.dto';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -43,6 +43,7 @@ export class CreateCustomerComponent {
   http = inject(HttpClient);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  platformId = inject(PLATFORM_ID);
 
   createCustomerForm = this.fb.group({
     fullname: ['', [Validators.required, Validators.minLength(3)]],
@@ -54,15 +55,17 @@ export class CreateCustomerComponent {
   customerId: string | null = null;
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
-      this.customerId = params.get('id');
-      if (this.customerId) {
-        this.loadCustomer(this.customerId);
-      } else {
-        this.addEmail();
-        this.addPhone();
-      }
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.route.paramMap.subscribe((params) => {
+        this.customerId = params.get('id');
+        if (this.customerId) {
+          this.loadCustomer(this.customerId);
+        } else {
+          this.addEmail();
+          this.addPhone();
+        }
+      });
+    }
   }
 
   loadCustomer(id: string) {
@@ -115,20 +118,37 @@ export class CreateCustomerComponent {
 
   onSubmit() {
     if (this.createCustomerForm.valid) {
-      this.http
-        .post<CustomerDto>(
-          'http://localhost:3000/customers',
-          this.createCustomerForm.value
-        )
-        .subscribe({
-          next: (response) => {
-            console.log(response);
-            this.router.navigate(['/customers']);
-          },
-          error: (error) => {
-            console.error(error);
-          },
-        });
+      if (this.customerId) {
+        this.http
+          .put<CustomerDto>(
+            `http://localhost:3000/customers/${this.customerId}`,
+            this.createCustomerForm.value
+          )
+          .subscribe({
+            next: (response) => {
+              console.log(response);
+              this.router.navigate(['/customers']);
+            },
+            error: (error) => {
+              console.error(error);
+            },
+          });
+      } else {
+        this.http
+          .post<CustomerDto>(
+            'http://localhost:3000/customers',
+            this.createCustomerForm.value
+          )
+          .subscribe({
+            next: (response) => {
+              console.log(response);
+              this.router.navigate(['/customers']);
+            },
+            error: (error) => {
+              console.error(error);
+            },
+          });
+      }
     }
     this.createCustomerForm.reset();
   }

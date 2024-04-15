@@ -63,7 +63,7 @@
   </div>
   <mat-form-field color="accent" appearance="outline">
     <mat-label>Data de registro</mat-label>
-    <input matInput [matDatepicker]="picker" />
+    <input matInput [matDatepicker]="picker" formControlName="registerDate" />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
@@ -74,7 +74,8 @@
     [disabled]="
       createCustomerForm.get('fullname')?.invalid ||
       createCustomerForm.get('email')?.invalid ||
-      createCustomerForm.get('phone')?.invalid
+      createCustomerForm.get('phone')?.invalid ||
+      createCustomerForm.get('registerDate')?.invalid
     "
     (click)="onSubmit()"
   >

@@ -1,39 +1,26 @@
-<div>
-  <div
-    style="
-      display: flex;
-      gap: 10px;
-      padding: 10px;
-      background-color: #bbd3ec;
-      color: white;
-      justify-content: flex-end;
-      align-items: center;
-      margin-bottom: 10px;
-    "
-  >
-    <a
-      routerLink="/customers"
+<div style="max-height: 100%">
+  <mat-toolbar color="primary">
+    <mat-toolbar-row
       style="
-        text-decoration: none;
-        color: white;
-        background-color: #007bff;
+        display: flex;
+        gap: 10px;
         padding: 10px;
-        border-radius: 5px;
-      "
-      >Clientes</a
-    >
-    <a
-      routerLink="/new-customer"
-      style="
-        text-decoration: none;
         color: white;
-        background-color: #0eaa3d;
-        padding: 10px;
-        border-radius: 5px;
+        justify-content: space-around;
+        align-items: center;
       "
-      >Registrar Cliente</a
     >
-  </div>
-
+      <span>Controle de clientes</span>
+      <a
+        routerLink="/customers"
+        style="text-decoration: none; color: white; border-radius: 5px"
+        >Clientes</a
+      >
+      <a routerLink="/new-customer" style="color: white; border-radius: 5px"
+        >Registrar Cliente</a
+      >
+      <mat-icon>menu</mat-icon>
+    </mat-toolbar-row>
+  </mat-toolbar>
   <router-outlet></router-outlet>
 </div>
