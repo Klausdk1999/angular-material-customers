@@ -2,6 +2,20 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.4.
 
+## Requisitos
+
+Antes de começar, certifique-se de que atende aos seguintes requisitos:
+
+- **Node.js**: Baixe e instale o Node.js, incluindo o gerenciador de pacotes npm, no site [nodejs.org](https://nodejs.org/).
+- **API Backend**: Baixe e instale a API Backend, disponível no repositório [AngularMaterialCustomersAPI](https://github.com/Klausdk1999/ts-node-auth).
+
+## Instalando o projeto
+
+- Execute o comando `npm install` para instalar as dependências do projeto.
+- Execute o comando `npm start` para iniciar o servidor de desenvolvimento. Navegue até `http://localhost:4200/`.
+
+O aplicativo exige login, o usuário padrão é `admin` e a senha padrão é `admin`, mas podem ser conferidos e alterados na API, no arquivo seed.ts .
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
