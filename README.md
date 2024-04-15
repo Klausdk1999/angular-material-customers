@@ -1,6 +1,10 @@
 # AngularMaterialCustomers
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.4.
+[Angular CLI](https://github.com/angular/angular-cli) versão 17.3.4.
+
+## Descrição
+
+Este projeto é um aplicativo de gerenciamento de clientes e contatos, desenvolvido com Angular e Angular Material, com autenticação baseada em tokens.
 
 ## Requisitos
 
